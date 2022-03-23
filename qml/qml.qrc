@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>SidePannel.qml</file>
+        <file>TabPanel.qml</file>
     </qresource>
 </RCC>
