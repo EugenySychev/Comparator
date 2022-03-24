@@ -10,8 +10,10 @@ struct FolderItem
 
     quint64 fileSize;
     QString absoluteFileName;
+    bool isUnique;
+    QStringList copiesList;
 
-    QString fileName() {
+    QString fileName() const{
         return absoluteFileName.split(QDir::separator()).last();
     }
     QString relativePath() {

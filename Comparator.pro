@@ -5,13 +5,17 @@ CONFIG += c++14
 INCLUDEPATH += include
 
 HEADERS += \
+    include/fileengineworker.h \
     include/compareengine.h \
+    include/fileengine.h \
     include/folderitem.h \
     include/foldermodel.h \
     include/utils.h
 
 SOURCES += \
+    src/fileengineworker.cpp \
     src/compareengine.cpp \
+    src/fileengine.cpp \
     src/foldermodel.cpp \
     src/main.cpp
 

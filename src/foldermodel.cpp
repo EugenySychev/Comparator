@@ -30,7 +30,9 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
 {
     qDebug() << "Request " << index << role;
     if (role == FileNameRole) {
-        return itemList.at(index.row()).absoluteFileName;
+        return itemList.at(index.row()).fileName();
+    } else if (role == FileSizeRole) {
+        return itemList.at(index.row()).fileSize;
     }
     return "";
 }
@@ -51,20 +53,6 @@ void FolderModel::scanFolder()
 }
 
 QList<FolderItem> FolderModel::getCurrentPathList(const QString& folderName, const int level) {
-    LOG_FUNC() << " folder " << folderName;
-    QDir currentDir(folderName);
-    currentDir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
-    QList<FolderItem> list;
-    for (int i = 0; i < currentDir.entryList().size(); i++) {
-        FolderItem item;
-        item.absoluteFileName = currentDir.entryList().at(i);
-        item.fileLevel = level;
-        list.append(item);
-    }
-    currentDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
-    for (int i = 0; i < currentDir.entryList().size(); i++) {
-        list.append(getCurrentPathList(folderName + QDir::separator() + currentDir.entryList().at(i), level + 1));
-    }
-    return list;
+
 }
 

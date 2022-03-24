@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 2.0
 
 Window {
     width: 640
@@ -11,13 +12,23 @@ Window {
         id: columnLayout
         anchors.fill: parent
         SidePannel {
-            id: sidePannel
+            id: leftPanel
             folderModel: engine ? engine.leftModel : null
+            Layout.margins: 10
         }
-
+        Button {
+            id: compareButton
+            text: qsTr("Compare")
+            Layout.alignment: Qt.AlignTop
+            Layout.margins: 10
+            onClicked: {
+                engine.startComparing()
+            }
+        }
         SidePannel {
-            id: sidePannel1
+            id: rightPanel
             folderModel: engine ? engine.rightModel : null
+            Layout.margins: 10
         }
     }
 

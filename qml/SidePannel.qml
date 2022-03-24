@@ -26,7 +26,7 @@ Item {
         id: listDelegate
         Text {
             id: itemTitle
-            text: name
+            text: name + " - " + size
             elide: Text.ElideLeft
             width: folderView.width
 
@@ -49,7 +49,6 @@ Item {
 
         RowLayout {
             id: controlLayout
-            Layout.margins: 10
 
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
             Button {
@@ -69,7 +68,6 @@ Item {
         ListView {
             id: folderView
 
-            Layout.margins: 10
             Layout.fillWidth: true
             Layout.fillHeight: true
             highlight: Rectangle { color: "lightsteelblue"; }
