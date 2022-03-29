@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QThread>
 #include "foldermodel.h"
-#include "fileengine.h"
 #include <QDebug>
+
+class FileEngine;
 
 class CompareEngine : public QObject
 {
@@ -15,6 +16,11 @@ class CompareEngine : public QObject
     Q_PROPERTY(QVariant rightModel READ getRightModel NOTIFY rightModelChanged)
     Q_PROPERTY(int progress READ getCurrentProgress NOTIFY progressChanged);
 public:
+
+    Q_INVOKABLE void changeNameChecking(bool isChecked);
+    Q_INVOKABLE void changeSizeChecking(bool isChecked);
+    Q_INVOKABLE void changeContentChecking(bool isChecked);
+
     enum CompareMode {
         COMPARE_SIZE = 0x1,
         COMPARE_NAME = 0x2,
@@ -44,8 +50,9 @@ private:
 
     FolderModel* left_folderModel;
     FolderModel* right_folderModel;
-    FileEngine fileEngine;
+    FileEngine *fileEngine;
     int currentProgress;
+    quint8 currentMode;
 
     QList<QPair < QString, QStringList> > compareList;
 };

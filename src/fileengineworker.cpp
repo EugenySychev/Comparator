@@ -30,7 +30,12 @@ QList<QPair<QString, QStringList> >* FileEngineWorker::getComparedList()
     return filesList;
 }
 
-void FileEngineWorker::setIncomingList(const QStringList &leftList, const QStringList &rightList, const CompareEngine::CompareMode mode)
+void FileEngineWorker::setCompareList(QList<QPair<QString, QStringList>> *list)
+{
+    filesList = list;
+}
+
+void FileEngineWorker::setIncomingList(const QStringList &leftList, const QStringList &rightList, const quint8 mode)
 {
     lfList = leftList;
     rtList = rightList;

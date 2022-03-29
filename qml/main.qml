@@ -24,11 +24,38 @@ Window {
             onClicked: {
                 engine.startComparing()
             }
-        }
+        }        
         SidePannel {
             id: rightPanel
             folderModel: engine ? engine.rightModel : null
             Layout.margins: 10
+        }
+        ColumnLayout {
+            id: compareTypeLayout
+
+            CheckBox {
+                id: compareName
+                text: qsTr("Name")
+                onCheckStateChanged: {
+                    engine.changeNameChecking(checkState)
+                }
+            }
+
+            CheckBox {
+                id: compareSize
+                text: qsTr("Size")
+                onCheckStateChanged: {
+                    engine.changeSizeChecking(checkState)
+                }
+            }
+
+            CheckBox {
+                id: compareContent
+                text: qsTr("Content")
+                onCheckStateChanged: {
+                    engine.changeContentChecking(checkState)
+                }
+            }
         }
     }
 

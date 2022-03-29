@@ -19,8 +19,8 @@ public:
 
     QStringList getFileList(const QString& folderName, const bool recursive = false);
     QList<QPair<QString, QStringList> >* getComparedList();
-    void setCompareList(const QList<QPair<QString, QStringList> > *list);
-    void setIncomingList(const QStringList& leftList, const QStringList& rightList, const CompareEngine::CompareMode mode = CompareEngine::COMPARE_FULL);
+    void setCompareList(QList<QPair<QString, QStringList> > *list);
+    void setIncomingList(const QStringList& leftList, const QStringList& rightList, const quint8 mode = CompareEngine::COMPARE_FULL);
     void startComparing();
 signals:
     void compareFinished();
@@ -28,7 +28,7 @@ signals:
 
 private:
     bool compareFiles(const QString& first, const QString &second);
-    CompareEngine::CompareMode currentMode;
+    quint8 currentMode;
     QStringList lfList, rtList;
     QList<QPair<QString, QStringList> > *filesList;
 };

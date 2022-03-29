@@ -1,4 +1,5 @@
 #include "fileengine.h"
+#include "fileengineworker.h"
 #include "utils.h"
 
 FileEngine::FileEngine(QObject *parent) : QObject(parent)
@@ -22,10 +23,11 @@ QList<QPair<QString, QStringList> >* FileEngine::getComparedList()
 
 void FileEngine::setCompareList(QList<QPair<QString, QStringList> > *list)
 {
-    filesList = list;
+    if (list)
+        filesList = list;
 }
 
-void FileEngine::startComparingLists(const QStringList &leftList, const QStringList &rightList, const CompareEngine::CompareMode mode)
+void FileEngine::startComparingLists(const QStringList &leftList, const QStringList &rightList, const quint8 mode)
 {
     workerThread = new QThread();
     fileEngineWorker = new FileEngineWorker();
