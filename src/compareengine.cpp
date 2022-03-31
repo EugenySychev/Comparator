@@ -6,7 +6,7 @@
 
 CompareEngine::CompareEngine(QObject *parent)
     : QObject(parent)
-    , currentMode{0}
+    , currentMode{COMPARE_NAME}
 {
     left_folderModel = new FolderModel();
     right_folderModel = new FolderModel();
@@ -24,23 +24,12 @@ CompareEngine::~CompareEngine()
     delete right_folderModel;
 }
 
-void CompareEngine::changeNameChecking(bool isChecked)
+void CompareEngine::changeCheckingFormat(CompareMode mode, bool isChecked)
 {
-    currentMode = isChecked ? currentMode | COMPARE_NAME : currentMode & ~COMPARE_NAME;
+    currentMode = isChecked ? currentMode | mode : currentMode & ~mode;
     LOG_FUNC() << currentMode;
 }
 
-void CompareEngine::changeSizeChecking(bool isChecked)
-{
-    currentMode = isChecked ? currentMode | COMPARE_SIZE : currentMode & ~COMPARE_SIZE;
-    LOG_FUNC() << currentMode;
-}
-
-void CompareEngine::changeContentChecking(bool isChecked)
-{
-    currentMode = isChecked ? currentMode | COMPARE_CONTENT : currentMode & ~COMPARE_CONTENT;
-    LOG_FUNC() << currentMode;
-}
 
 void CompareEngine::updateModel()
 {

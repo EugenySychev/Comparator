@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
 
     // class StandartIconProvider above
     // engine.addImageProvider(QLatin1String("standardicons"), new StandardIconProvider(app.style()));
+    qmlRegisterType<CompareEngine>("Engine", 1, 0, "CompareEngine");
 
     auto compareEngine = new CompareEngine();
     engine.rootContext()->setContextProperty("engine", compareEngine);

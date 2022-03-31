@@ -12,14 +12,12 @@ class CompareEngine : public QObject
 {
     Q_OBJECT
 
+    Q_ENUMS(CompareMode);
     Q_PROPERTY(QVariant leftModel READ getLeftModel  NOTIFY leftModelChanged)
     Q_PROPERTY(QVariant rightModel READ getRightModel NOTIFY rightModelChanged)
     Q_PROPERTY(int progress READ getCurrentProgress NOTIFY progressChanged);
 public:
 
-    Q_INVOKABLE void changeNameChecking(bool isChecked);
-    Q_INVOKABLE void changeSizeChecking(bool isChecked);
-    Q_INVOKABLE void changeContentChecking(bool isChecked);
 
     enum CompareMode {
         COMPARE_SIZE = 0x1,
@@ -27,7 +25,8 @@ public:
         COMPARE_CONTENT = 0x04,
         COMPARE_FULL = 0x07
     };
-    Q_ENUM(CompareMode);
+
+    Q_INVOKABLE void changeCheckingFormat(CompareMode mode, bool isChecked);
 
     explicit CompareEngine(QObject *parent = nullptr);
     ~CompareEngine();

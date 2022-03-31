@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import Engine 1.0
 
 Window {
     width: 640
@@ -36,8 +37,9 @@ Window {
             CheckBox {
                 id: compareName
                 text: qsTr("Name")
+                checked: true
                 onCheckStateChanged: {
-                    engine.changeNameChecking(checkState)
+                    engine.changeCheckingFormat(CompareEngine.COMPARE_NAME, checkState)
                 }
             }
 
@@ -45,7 +47,7 @@ Window {
                 id: compareSize
                 text: qsTr("Size")
                 onCheckStateChanged: {
-                    engine.changeSizeChecking(checkState)
+                    engine.changeCheckingFormat(CompareEngine.COMPARE_SIZE, checkState)
                 }
             }
 
@@ -53,7 +55,7 @@ Window {
                 id: compareContent
                 text: qsTr("Content")
                 onCheckStateChanged: {
-                    engine.changeContentChecking(checkState)
+                    engine.changeCheckingFormat(CompareEngine.COMPARE_CONTENT, checkState)
                 }
             }
         }

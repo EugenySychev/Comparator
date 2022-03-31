@@ -9,6 +9,7 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
     Layout.alignment: Qt.AlignTop
+    Layout.minimumWidth: 300
     FileDialog {
         id: fileDialog
         title: "Please choose a file"
