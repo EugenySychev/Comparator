@@ -12,6 +12,7 @@ FileEngine::FileEngine(QObject *parent)
     fileEngineWorker->moveToThread(workerThread);
     connect( fileEngineWorker, &FileEngineWorker::progressChanged, this, &FileEngine::progressChanged);
     connect( fileEngineWorker, &FileEngineWorker::compareFinished, this, &FileEngine::compareFinished);
+    connect( fileEngineWorker, &FileEngineWorker::fileListLoaded, this, &FileEngine::fileListLoaded);
 }
 
 FileEngine::~FileEngine()
@@ -27,11 +28,11 @@ FileEngine::~FileEngine()
     fileEngineWorker->deleteLater();
 }
 
-QStringList FileEngine::getFileList(const QString &folderName, const bool recursive)
+void FileEngine::getFileList(QStringList& list, const QString &folderName, const bool recursive)
 {
-    if (fileEngineWorker)
-        return fileEngineWorker->getFileList(folderName, recursive);
-    return QStringList();
+    if (fileEngineWorker) {
+        fileEngineWorker->getFileList(list, folderName, recursive);
+    }
 }
 
 QList<QPair<QString, QStringList> >* FileEngine::getComparedList()
@@ -45,7 +46,7 @@ void FileEngine::setCompareList(QList<QPair<QString, QStringList> > *list)
         filesList = list;
 }
 
-void FileEngine::startComparingLists(const QStringList &leftList, const QStringList &rightList, const quint8 mode)
+void FileEngine::startComparingLists(QStringList* leftList, QStringList* rightList, const quint8 mode)
 {
     fileEngineWorker->setIncomingList(leftList, rightList, mode);
     fileEngineWorker->setCompareList(filesList);

@@ -20,11 +20,12 @@ public:
     explicit FileEngine(QObject *parent = nullptr);
     ~FileEngine();
 
-    QStringList getFileList(const QString& folderName, const bool recursive = false) ;
+    void getFileList(QStringList& list, const QString& folderName, const bool recursive = false) ;
     QList<QPair<QString, QStringList> >* getComparedList();
     void setCompareList(QList<QPair<QString, QStringList> > *list);
-    void startComparingLists(const QStringList& leftList, const QStringList& rightList, const quint8 mode = CompareEngine::COMPARE_FULL);
+    void startComparingLists(QStringList* leftList, QStringList* rightList, const quint8 mode = CompareEngine::COMPARE_FULL);
 signals:
+    void fileListLoaded();
     void compareFinished();
     void progressChanged(int value);
 

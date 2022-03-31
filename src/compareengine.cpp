@@ -10,10 +10,12 @@ CompareEngine::CompareEngine(QObject *parent)
 {
     left_folderModel = new FolderModel();
     right_folderModel = new FolderModel();
-    connect (left_folderModel, &FolderModel::currentPathChanged, this, &CompareEngine::changeLeftModelSource);
+    connect(left_folderModel, &FolderModel::currentPathChanged, this, &CompareEngine::changeLeftModelSource);
     connect(right_folderModel, &FolderModel::currentPathChanged, this, &CompareEngine::changeRightModelSource);
+
     fileEngine = new FileEngine(this);
     fileEngine->setCompareList(&compareList);
+    connect(fileEngine, &FileEngine::compareFinished, this, &CompareEngine::updateCompareResult);
 }
 
 CompareEngine::~CompareEngine()
@@ -49,6 +51,9 @@ void CompareEngine::updateModel()
 void CompareEngine::startComparing()
 {
     LOG_FUNC();
+    if (fileEngine) {
+        fileEngine->startComparingLists(left_folderModel->getList(), right_folderModel->getList(), currentMode);
+    }
 }
 
 void CompareEngine::onProgressChanged(int value)
@@ -59,14 +64,50 @@ void CompareEngine::onProgressChanged(int value)
 
 void CompareEngine::changeLeftModelSource(QString sourcePath)
 {
-    if (fileEngine)
-        left_folderModel->setList(fileEngine->getFileList(sourcePath, true));
+    if (fileEngine) {
+        QStringList *list = left_folderModel->getList();
+        connect(fileEngine, &FileEngine::fileListLoaded, this, &CompareEngine::leftListUpdated);
+        fileEngine->getFileList(*list, sourcePath, true);
+    }
 }
 
 void CompareEngine::changeRightModelSource(QString sourcePath)
 {
-    if (fileEngine)
-        right_folderModel->setList(fileEngine->getFileList(sourcePath, true));
+    if (fileEngine) {
+        QStringList *list = right_folderModel->getList();
+        connect(fileEngine, &FileEngine::fileListLoaded, this, &CompareEngine::rightListUpdated);
+        fileEngine->getFileList(*list, sourcePath, true);
+    }
+}
+
+void CompareEngine::rightListUpdated() {
+    right_folderModel->listUpdated();
+    disconnect(fileEngine, &FileEngine::fileListLoaded, this, &CompareEngine::rightListUpdated);
+}
+
+void CompareEngine::leftListUpdated() {
+    left_folderModel->listUpdated();
+    disconnect(fileEngine, &FileEngine::fileListLoaded, this, &CompareEngine::leftListUpdated);
+}
+
+void CompareEngine::updateCompareResult() {
+    LOG_FUNC() << compareList;
+    QStringList leftList;
+    QStringList rightList;
+
+    for (int i = 0; i < compareList.size(); i++)
+    {
+        if (!compareList[i].second.isEmpty()) {
+            leftList.append(compareList[i].first);
+            for(int j = 0; j < compareList[i].second.size(); j++) {
+                if (!rightList.contains(compareList[i].second[j])) {
+                    rightList.append(compareList[i].second[j]);
+                }
+            }
+        }
+    }
+    left_folderModel->changeNonUniue(leftList);
+    right_folderModel->changeNonUniue(rightList);
 }
 
 

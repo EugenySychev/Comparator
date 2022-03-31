@@ -29,6 +29,7 @@ public:
             return { { FileNameRole, "name" },
                 { FileSizeRole, "size" },
                 { FolderLevelRole, "level" },
+                { UniqueRole, "is_unique" }
             };
         }
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -39,14 +40,15 @@ public:
     QString getCurrentPath();
 
     void changeNonUniue(QStringList list);
-    void setList(QStringList list);
+    QStringList* getList() { return &simpleList; }
+public slots:
+    void listUpdated();
+
 signals:
     void currentPathChanged(QString);
-    void getListCompleted();
 
 private:
-    void scanFolder();
-
+    QStringList simpleList;
     QString m_sourcePath;
     QList<FolderItem> itemList;
     QList<FolderItem> getCurrentPathList(const QString &folderName, const int level);

@@ -16,29 +16,32 @@ void FolderModel::changePath(const QString &folder)
 
 }
 
-void FolderModel::setList(QStringList list)
+void FolderModel::listUpdated()
 {
+    beginRemoveRows(QModelIndex(), 0, itemList.count());
     itemList.clear();
-    beginInsertRows(QModelIndex(), 0,list.count());
-    for (int i = 0; i < list.size(); i++) {
+    endRemoveRows();
+    beginInsertRows(QModelIndex(), 0, simpleList.count() - 1);
+    for (int i = 0; i < simpleList.size(); i++) {
         FolderItem item;
-        item.absoluteFileName = list[i];
+        item.absoluteFileName = simpleList[i];
         item.isUnique = true;
         itemList.append(item);
     }
     endInsertRows();
-    emit dataChanged(index(0,0), index(itemList.count(),  1), {  FileNameRole, UniqueRole });
+//    emit dataChanged(index(0), index(itemList.count()));
 }
 
 int FolderModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
+    LOG_FUNC() << itemList.count();
     return itemList.count();
 }
 
 QVariant FolderModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "Request " << index << role;
+    LOG_FUNC() << "Request " << index.row() << " a " << role;
     if (role == FileNameRole) {
         return itemList.at(index.row()).fileName();
     } else if (role == FileSizeRole) {
@@ -56,11 +59,18 @@ QString FolderModel::getCurrentPath()
 }
 
 void FolderModel::changeNonUniue(QStringList list) {
+    LOG_FUNC() << list;
     for (int i = 0; i < itemList.size(); i++) {
-        if (list.contains(itemList.at(i).fileName()))
-            itemList[i].isUnique = true;
-        else
+        if (list.contains(itemList.at(i).absoluteFileName))
+        {
             itemList[i].isUnique = false;
+        } else {
+            itemList[i].isUnique = true;
+        }
     }
+
+    QModelIndex start_index = createIndex(0, 0);
+    QModelIndex end_index = createIndex((itemList.count() - 1), 0);
+    emit dataChanged(start_index, end_index);
 }
 

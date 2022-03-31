@@ -29,12 +29,13 @@ Item {
             text: name
             elide: Text.ElideLeft
             width: folderView.width
+            color: is_unique ? "black" : "red"
 
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
                 onClicked: {
-//                    console.log(folderView.height + " and " + folderView.width)
+                    console.log(is_unique)
 
                     folderView.currentIndex = index
                 }

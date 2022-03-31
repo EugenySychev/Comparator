@@ -43,6 +43,9 @@ public slots:
     void changeLeftModelSource(QString);
     void changeRightModelSource(QString);
 
+    void rightListUpdated();
+    void leftListUpdated();
+    void updateCompareResult();
 signals:
     void leftModelChanged();
     void rightModelChanged();

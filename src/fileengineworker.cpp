@@ -7,8 +7,14 @@ FileEngineWorker::FileEngineWorker(QObject *parent) : QObject(parent)
 
 }
 
-QStringList FileEngineWorker::getFileList(const QString &folderName, const bool recursive)
+void FileEngineWorker::getFileList(QStringList& list, const QString &folderName, const bool recursive)
 {
+    list.clear();
+    list.append(getFileListFromDir(folderName, recursive));
+    emit fileListLoaded();
+}
+
+QStringList FileEngineWorker::getFileListFromDir(const QString &folderName, const bool recursive) {
     LOG_FUNC() << " folder " << folderName;
     QDir currentDir(folderName);
     QStringList list;
@@ -19,7 +25,7 @@ QStringList FileEngineWorker::getFileList(const QString &folderName, const bool 
     if (recursive) {
         currentDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
         for (int i = 0; i < currentDir.entryList().size(); i++) {
-            list.append(getFileList(folderName + QDir::separator() + currentDir.entryList().at(i)));
+            list.append(getFileListFromDir(folderName + QDir::separator() + currentDir.entryList().at(i), recursive));
         }
     }
     return list;
@@ -35,7 +41,7 @@ void FileEngineWorker::setCompareList(QList<QPair<QString, QStringList>> *list)
     filesList = list;
 }
 
-void FileEngineWorker::setIncomingList(const QStringList &leftList, const QStringList &rightList, const quint8 mode)
+void FileEngineWorker::setIncomingList(QStringList* leftList, QStringList* rightList, const quint8 mode)
 {
     lfList = leftList;
     rtList = rightList;
@@ -45,22 +51,25 @@ void FileEngineWorker::setIncomingList(const QStringList &leftList, const QStrin
 
 void FileEngineWorker::startComparing()
 {
-    int totalLeft = lfList.size();
-    int totalRight = rtList.size();
+    int totalLeft = lfList->size();
+    int totalRight = rtList->size();
     filesList->clear();
     for (int i = 0; i < totalLeft; i++) {
         emit progressChanged(i / totalLeft);
+        LOG_FUNC() << "Compare " << lfList->at(i);
+
         QStringList listAt;
         for (int j = 0; j < totalRight; j++) {
-            if (compareFiles(lfList.at(i), rtList.at(j)))
+            LOG_FUNC() << "With " << rtList->at(j);
+
+            if (compareFiles(lfList->at(i), rtList->at(j)))
             {
-                listAt.append(rtList.at(i));
+                LOG_FUNC() << "match found ";
+                listAt.append(rtList->at(j));
             }
         }
-        if (listAt.empty())
-            filesList->append(qMakePair(lfList.at(i), QStringList()));
-        else
-            filesList->append(qMakePair(lfList.at(i), listAt));
+        filesList->append(qMakePair(lfList->at(i), listAt));
+        LOG_FUNC() << "Append " << qMakePair(lfList->at(i), listAt);
     }
     emit compareFinished();
 }
@@ -69,7 +78,7 @@ bool FileEngineWorker::compareFiles(const QString &first, const QString& second)
 {
     QFile lhf(first);
     QFile rhf(second);
-    if ( ( (currentMode & CompareEngine::COMPARE_NAME) != 0) && first != second)
+    if ( ( (currentMode & CompareEngine::COMPARE_NAME) != 0) && first.split(QDir::separator()).last() != second.split(QDir::separator()).last())
         return false;
 
     if ( ( (currentMode & CompareEngine::COMPARE_SIZE) != 0) && (lhf.size() != rhf.size()))
