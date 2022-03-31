@@ -29,6 +29,8 @@
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
+    app.setOrganizationName("Sychev");
+    app.setOrganizationDomain("test");
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

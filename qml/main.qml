@@ -8,57 +8,65 @@ Window {
     width: 640
     height: 480
     visible: true
-
-    RowLayout {
-        id: columnLayout
+    ColumnLayout {
         anchors.fill: parent
-        SidePannel {
-            id: leftPanel
-            folderModel: engine ? engine.leftModel : null
-            Layout.margins: 10
-        }
-        Button {
-            id: compareButton
-            text: qsTr("Compare")
-            Layout.alignment: Qt.AlignTop
-            Layout.margins: 10
-            onClicked: {
-                engine.startComparing()
+        RowLayout {
+            id: columnLayout
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            SidePannel {
+                id: leftPanel
+                folderModel: engine ? engine.leftModel : null
+                Layout.margins: 10
             }
-        }        
-        SidePannel {
-            id: rightPanel
-            folderModel: engine ? engine.rightModel : null
-            Layout.margins: 10
-        }
-        ColumnLayout {
-            id: compareTypeLayout
-
-            CheckBox {
-                id: compareName
-                text: qsTr("Name")
-                checked: true
-                onCheckStateChanged: {
-                    engine.changeCheckingFormat(CompareEngine.COMPARE_NAME, checkState)
+            Button {
+                id: compareButton
+                text: qsTr("Compare")
+                Layout.alignment: Qt.AlignTop
+                Layout.margins: 10
+                onClicked: {
+                    engine.startComparing()
                 }
             }
-
-            CheckBox {
-                id: compareSize
-                text: qsTr("Size")
-                onCheckStateChanged: {
-                    engine.changeCheckingFormat(CompareEngine.COMPARE_SIZE, checkState)
-                }
+            SidePannel {
+                id: rightPanel
+                folderModel: engine ? engine.rightModel : null
+                Layout.margins: 10
             }
+            ColumnLayout {
+                id: compareTypeLayout
 
-            CheckBox {
-                id: compareContent
-                text: qsTr("Content")
-                onCheckStateChanged: {
-                    engine.changeCheckingFormat(CompareEngine.COMPARE_CONTENT, checkState)
+                CheckBox {
+                    id: compareName
+                    text: qsTr("Name")
+                    checked: true
+                    onCheckStateChanged: {
+                        engine.changeCheckingFormat(CompareEngine.COMPARE_NAME, checkState)
+                    }
+                }
+
+                CheckBox {
+                    id: compareSize
+                    text: qsTr("Size")
+                    onCheckStateChanged: {
+                        engine.changeCheckingFormat(CompareEngine.COMPARE_SIZE, checkState)
+                    }
+                }
+
+                CheckBox {
+                    id: compareContent
+                    text: qsTr("Content")
+                    onCheckStateChanged: {
+                        engine.changeCheckingFormat(CompareEngine.COMPARE_CONTENT, checkState)
+                    }
                 }
             }
         }
+        ProgressBar {
+            id: progressBar
+            Layout.fillWidth: true
+            indeterminate: true
+        }
+
     }
-
 }
