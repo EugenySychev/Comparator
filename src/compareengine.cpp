@@ -10,7 +10,10 @@ CompareEngine::CompareEngine(QObject *parent)
 {
     left_folderModel = new FolderModel();
     right_folderModel = new FolderModel();
-    //fileEngine->setCompareList(&compareList);
+    connect (left_folderModel, &FolderModel::currentPathChanged, this, &CompareEngine::changeLeftModelSource);
+    connect(right_folderModel, &FolderModel::currentPathChanged, this, &CompareEngine::changeRightModelSource);
+    fileEngine = new FileEngine(this);
+    fileEngine->setCompareList(&compareList);
 }
 
 CompareEngine::~CompareEngine()
@@ -52,6 +55,18 @@ void CompareEngine::onProgressChanged(int value)
 {
     currentProgress = value;
     emit progressChanged();
+}
+
+void CompareEngine::changeLeftModelSource(QString sourcePath)
+{
+    if (fileEngine)
+        left_folderModel->setList(fileEngine->getFileList(sourcePath, true));
+}
+
+void CompareEngine::changeRightModelSource(QString sourcePath)
+{
+    if (fileEngine)
+        right_folderModel->setList(fileEngine->getFileList(sourcePath, true));
 }
 
 

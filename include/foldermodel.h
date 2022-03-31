@@ -21,7 +21,8 @@ public:
      enum FilesRoles {
          FileNameRole = Qt::UserRole + 1,
          FileSizeRole,
-         FolderLevelRole
+         FolderLevelRole,
+         UniqueRole
      };
 
     QHash<int,QByteArray> roleNames() const override {
@@ -37,9 +38,12 @@ public:
 
     QString getCurrentPath();
 
+    void changeNonUniue(QStringList list);
+    void setList(QStringList list);
 signals:
-    void currentPathChanged();
+    void currentPathChanged(QString);
     void getListCompleted();
+
 private:
     void scanFolder();
 

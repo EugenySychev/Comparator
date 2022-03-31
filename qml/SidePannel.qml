@@ -26,7 +26,7 @@ Item {
         id: listDelegate
         Text {
             id: itemTitle
-            text: name + " - " + size
+            text: name
             elide: Text.ElideLeft
             width: folderView.width
 
@@ -34,7 +34,7 @@ Item {
                 id: mouseArea
                 anchors.fill: parent
                 onClicked: {
-                    console.log(itemTitle.width + " and " + folderView.width)
+//                    console.log(folderView.height + " and " + folderView.width)
 
                     folderView.currentIndex = index
                 }

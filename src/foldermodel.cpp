@@ -8,21 +8,31 @@ FolderModel::FolderModel()
 
 void FolderModel::changePath(const QString &folder)
 {
-    bool needScan = false;
-    if (m_sourcePath != folder)
-        needScan = true;
     m_sourcePath = folder;
     if (m_sourcePath.startsWith("file://"))
         m_sourcePath.remove("file://");
-    if (needScan) {
-        scanFolder();
-        emit currentPathChanged();
+
+    emit currentPathChanged(m_sourcePath);
+
+}
+
+void FolderModel::setList(QStringList list)
+{
+    itemList.clear();
+    beginInsertRows(QModelIndex(), 0,list.count());
+    for (int i = 0; i < list.size(); i++) {
+        FolderItem item;
+        item.absoluteFileName = list[i];
+        item.isUnique = true;
+        itemList.append(item);
     }
+    endInsertRows();
+    emit dataChanged(index(0,0), index(itemList.count(),  1), {  FileNameRole, UniqueRole });
 }
 
 int FolderModel::rowCount(const QModelIndex &parent) const
 {
-//    qDebug() << itemList.count();
+    Q_UNUSED(parent);
     return itemList.count();
 }
 
@@ -33,6 +43,8 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
         return itemList.at(index.row()).fileName();
     } else if (role == FileSizeRole) {
         return itemList.at(index.row()).fileSize;
+    } else if (role == UniqueRole) {
+        return itemList.at(index.row()).isUnique;
     }
     return "";
 }
@@ -43,16 +55,12 @@ QString FolderModel::getCurrentPath()
     return m_sourcePath;
 }
 
-void FolderModel::scanFolder()
-{
-    itemList.clear();
-    itemList.append(getCurrentPathList(m_sourcePath, 0));
-    beginInsertRows(QModelIndex(), 0,itemList.count());
-    endInsertRows();
-    emit dataChanged(index(0,0), index(itemList.count(),  1), {  Qt::DisplayRole });
-}
-
-QList<FolderItem> FolderModel::getCurrentPathList(const QString& folderName, const int level) {
-
+void FolderModel::changeNonUniue(QStringList list) {
+    for (int i = 0; i < itemList.size(); i++) {
+        if (list.contains(itemList.at(i).fileName()))
+            itemList[i].isUnique = true;
+        else
+            itemList[i].isUnique = false;
+    }
 }
 

@@ -40,6 +40,8 @@ public:
 public slots:
     void startComparing();
     void onProgressChanged(int);
+    void changeLeftModelSource(QString);
+    void changeRightModelSource(QString);
 
 signals:
     void leftModelChanged();
