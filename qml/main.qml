@@ -19,20 +19,36 @@ Window {
                 folderModel: engine ? engine.leftModel : null
                 Layout.margins: 10
             }
-            Button {
-                id: compareButton
-                Layout.alignment: Qt.AlignCenter
-                Layout.margins: 10
-                implicitWidth: height
-                Image {
-                    id: icon
-                    height: compareButton.height
-                    width: compareButton.height
-                    source: engine.state === CompareEngine.COMPARING ? "res/cancel.png" : "res/two-arrows-vector.png"
+            ColumnLayout {
+                Button {
+                    id: compareButton
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.margins: 10
+                    implicitWidth: height
+                    Image {
+                        height: compareButton.height
+                        width: compareButton.height
+                        source: engine.state === CompareEngine.COMPARING ? "res/cancel.png" : "res/two-arrows-vector.png"
+                    }
+                    onClicked: {
+                        engine.startComparing()
+                    }
                 }
-                onClicked: {
-                    engine.startComparing()
+                Button {
+                    id: checkPairsButton
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.margins: 10
+                    implicitWidth: height
+                    Image {
+                        height: compareButton.height
+                        width: compareButton.height
+                        source: "res/right_arrow.png"
+                    }
+                    onClicked: {
+                        engine.selectPair()
+                    }
                 }
+
             }
 
             SidePannel {

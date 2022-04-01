@@ -117,5 +117,22 @@ void CompareEngine::updateCompareResult() {
     emit stateChanged();
 }
 
+void CompareEngine::selectPair()
+{
+    int i = left_folderModel->getCurrentIndex();
+    QStringList rightList;
+    if (compareList.size() > 0 && i <= compareList.size())
+    {
+        if (!compareList[i].second.isEmpty()) {
+            for(int j = 0; j < compareList[i].second.size(); j++) {
+                if (!rightList.contains(compareList[i].second[j])) {
+                    rightList.append(compareList[i].second[j]);
+                }
+            }
+        }
+        right_folderModel->changeNonUniue(rightList);
+    }
+}
+
 
 

@@ -16,6 +16,11 @@ void FolderModel::changePath(const QString &folder)
 
 }
 
+void FolderModel::setCurrentIndex(const int index)
+{
+    currentIndex = index;
+}
+
 void FolderModel::listUpdated()
 {
     beginRemoveRows(QModelIndex(), 0, itemList.count());
@@ -66,5 +71,10 @@ void FolderModel::changeNonUniue(QStringList list) {
     QModelIndex start_index = createIndex(0, 0);
     QModelIndex end_index = createIndex((itemList.count() - 1), 0);
     emit dataChanged(start_index, end_index);
+}
+
+int FolderModel::getCurrentIndex()
+{
+    return currentIndex;
 }
 

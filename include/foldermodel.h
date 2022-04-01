@@ -14,7 +14,7 @@ public:
 
     Q_INVOKABLE void changePath(const QString& folder);
     Q_PROPERTY(QString currentPath READ getCurrentPath NOTIFY currentPathChanged)
-
+    Q_INVOKABLE void setCurrentIndex(const int index);
     Q_ENUMS(FilesRoles)
 
      enum FilesRoles {
@@ -37,6 +37,7 @@ public:
 
     void changeNonUniue(QStringList list);
     QStringList* getList() { return &simpleList; }
+    int getCurrentIndex();
 public slots:
     void listUpdated();
 
@@ -44,10 +45,12 @@ signals:
     void currentPathChanged(QString);
 
 private:
+    int currentIndex;
     QStringList simpleList;
     QString m_sourcePath;
     QList<FolderItem> itemList;
     QList<FolderItem> getCurrentPathList(const QString &folderName, const int level);
+
 };
 
 #endif // FOLDERMODEL_H

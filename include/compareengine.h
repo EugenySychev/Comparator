@@ -52,6 +52,7 @@ public slots:
     void rightListUpdated();
     void leftListUpdated();
     void updateCompareResult();
+    void selectPair();
 
 signals:
     void leftModelChanged();

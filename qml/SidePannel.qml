@@ -31,7 +31,6 @@ Item {
             color: folderView.currentIndex === index ?  "lightgrey" : "transparent"
             Text {
                 id: itemTitle
-                anchors.fill: paretn
                 text: name
                 elide: Text.ElideLeft
                 width: folderView.width
@@ -42,6 +41,7 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         folderView.currentIndex = index
+                        folderModel.setCurrentIndex(index)
                     }
                 }
             }
@@ -55,7 +55,6 @@ Item {
 
         RowLayout {
             id: controlLayout
-
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
             Button {
                 id: openButton
