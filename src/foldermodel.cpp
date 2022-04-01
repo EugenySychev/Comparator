@@ -29,23 +29,18 @@ void FolderModel::listUpdated()
         itemList.append(item);
     }
     endInsertRows();
-//    emit dataChanged(index(0), index(itemList.count()));
 }
 
 int FolderModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    LOG_FUNC() << itemList.count();
     return itemList.count();
 }
 
 QVariant FolderModel::data(const QModelIndex &index, int role) const
 {
-    LOG_FUNC() << "Request " << index.row() << " a " << role;
     if (role == FileNameRole) {
         return itemList.at(index.row()).fileName();
-    } else if (role == FileSizeRole) {
-        return itemList.at(index.row()).fileSize;
     } else if (role == UniqueRole) {
         return itemList.at(index.row()).isUnique;
     }
@@ -59,7 +54,6 @@ QString FolderModel::getCurrentPath()
 }
 
 void FolderModel::changeNonUniue(QStringList list) {
-    LOG_FUNC() << list;
     for (int i = 0; i < itemList.size(); i++) {
         if (list.contains(itemList.at(i).absoluteFileName))
         {

@@ -24,10 +24,15 @@ public:
     QList<QPair<QString, QStringList> >* getComparedList();
     void setCompareList(QList<QPair<QString, QStringList> > *list);
     void startComparingLists(QStringList* leftList, QStringList* rightList, const quint8 mode = CompareEngine::COMPARE_FULL);
+    void cancelComparing();
+public slots:
+    void moveThread();
 signals:
     void fileListLoaded();
     void compareFinished();
     void progressChanged(int value);
+    void startComparing();
+    void stopComparing();
 
 private:
     bool compareFiles(const QString& first, const QString &second, const CompareEngine::CompareMode mode);

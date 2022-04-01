@@ -5,7 +5,7 @@ import QtQuick.Controls 2.0
 import Engine 1.0
 
 Window {
-    width: 640
+    width: 900
     height: 480
     visible: true
     ColumnLayout {
@@ -21,7 +21,7 @@ Window {
             }
             Button {
                 id: compareButton
-                text: qsTr("Compare")
+                text: engine.state === CompareEngine.COMPARING ? qsTr("Cancel") : qsTr("Compare")
                 Layout.alignment: Qt.AlignTop
                 Layout.margins: 10
                 onClicked: {
@@ -35,6 +35,15 @@ Window {
             }
             ColumnLayout {
                 id: compareTypeLayout
+                CheckBox {
+                    Layout.alignment: Qt.AlignTop
+                    checked: true
+                    text: qsTr("Recursive scan directories")
+                    onCheckStateChanged: engine.changeRecursive(checkState)
+                }
+                Text {
+                    text: qsTr("Compare by:")
+                }
 
                 CheckBox {
                     id: compareName
@@ -65,8 +74,9 @@ Window {
         ProgressBar {
             id: progressBar
             Layout.fillWidth: true
-            indeterminate: true
+            from: 0
+            to: 100
+            value: engine.progress
         }
-
     }
 }

@@ -7,6 +7,8 @@
 CompareEngine::CompareEngine(QObject *parent)
     : QObject(parent)
     , currentMode{COMPARE_NAME}
+    , currentState{IDLE}
+    , recursiveScan{true}
 {
     left_folderModel = new FolderModel();
     right_folderModel = new FolderModel();
@@ -16,6 +18,7 @@ CompareEngine::CompareEngine(QObject *parent)
     fileEngine = new FileEngine(this);
     fileEngine->setCompareList(&compareList);
     connect(fileEngine, &FileEngine::compareFinished, this, &CompareEngine::updateCompareResult);
+    connect(fileEngine, &FileEngine::progressChanged, this, &CompareEngine::onProgressChanged);
 }
 
 CompareEngine::~CompareEngine()
@@ -27,9 +30,12 @@ CompareEngine::~CompareEngine()
 void CompareEngine::changeCheckingFormat(CompareMode mode, bool isChecked)
 {
     currentMode = isChecked ? currentMode | mode : currentMode & ~mode;
-    LOG_FUNC() << currentMode;
 }
 
+void CompareEngine::changeRecursive(bool recursive)
+{
+    recursiveScan = recursive;
+}
 
 void CompareEngine::updateModel()
 {
@@ -39,16 +45,27 @@ void CompareEngine::updateModel()
 
 void CompareEngine::startComparing()
 {
-    LOG_FUNC();
-    if (fileEngine) {
-        fileEngine->startComparingLists(left_folderModel->getList(), right_folderModel->getList(), currentMode);
+    if (fileEngine){
+        if (currentState != COMPARING) {
+            currentState = COMPARING;
+            emit stateChanged();
+            fileEngine->startComparingLists(left_folderModel->getList(), right_folderModel->getList(), currentMode);
+        } else {
+            currentState = CANCELED;
+            emit stateChanged();
+            fileEngine->cancelComparing();
+        }
     }
+
 }
 
 void CompareEngine::onProgressChanged(int value)
 {
-    currentProgress = value;
-    emit progressChanged();
+    if (currentProgress != value)
+    {
+        currentProgress = value;
+        emit progressChanged();
+    }
 }
 
 void CompareEngine::changeLeftModelSource(QString sourcePath)
@@ -56,7 +73,7 @@ void CompareEngine::changeLeftModelSource(QString sourcePath)
     if (fileEngine) {
         QStringList *list = left_folderModel->getList();
         connect(fileEngine, &FileEngine::fileListLoaded, this, &CompareEngine::leftListUpdated);
-        fileEngine->getFileList(*list, sourcePath, true);
+        fileEngine->getFileList(*list, sourcePath, recursiveScan);
     }
 }
 
@@ -65,7 +82,7 @@ void CompareEngine::changeRightModelSource(QString sourcePath)
     if (fileEngine) {
         QStringList *list = right_folderModel->getList();
         connect(fileEngine, &FileEngine::fileListLoaded, this, &CompareEngine::rightListUpdated);
-        fileEngine->getFileList(*list, sourcePath, true);
+        fileEngine->getFileList(*list, sourcePath, recursiveScan);
     }
 }
 
@@ -80,7 +97,6 @@ void CompareEngine::leftListUpdated() {
 }
 
 void CompareEngine::updateCompareResult() {
-    LOG_FUNC() << compareList;
     QStringList leftList;
     QStringList rightList;
 
@@ -97,6 +113,8 @@ void CompareEngine::updateCompareResult() {
     }
     left_folderModel->changeNonUniue(leftList);
     right_folderModel->changeNonUniue(rightList);
+    currentState = IDLE;
+    emit stateChanged();
 }
 
 

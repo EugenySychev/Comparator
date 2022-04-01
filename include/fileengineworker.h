@@ -21,7 +21,9 @@ public:
     QList<QPair<QString, QStringList> >* getComparedList();
     void setCompareList(QList<QPair<QString, QStringList> > *list);
     void setIncomingList(QStringList *leftList, QStringList *rightList, const quint8 mode = CompareEngine::COMPARE_FULL);
+public slots:
     void startComparing();
+    void stopComparing();
 signals:
     void fileListLoaded();
     void compareFinished();
@@ -34,6 +36,7 @@ private:
     QStringList* lfList;
     QStringList* rtList;
     QList<QPair<QString, QStringList> > *filesList;
+    std::atomic_bool canceled;
 };
 
 #endif // FILEENGINEWORKER_H

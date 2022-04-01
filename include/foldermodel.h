@@ -11,7 +11,6 @@ class FolderModel : public QAbstractListModel
 
 public:
     FolderModel();
-    FolderModel(const FolderModel& model) = default;
 
     Q_INVOKABLE void changePath(const QString& folder);
     Q_PROPERTY(QString currentPath READ getCurrentPath NOTIFY currentPathChanged)
@@ -20,15 +19,12 @@ public:
 
      enum FilesRoles {
          FileNameRole = Qt::UserRole + 1,
-         FileSizeRole,
-         FolderLevelRole,
          UniqueRole
      };
 
     QHash<int,QByteArray> roleNames() const override {
-            return { { FileNameRole, "name" },
-                { FileSizeRole, "size" },
-                { FolderLevelRole, "level" },
+            return {
+                { FileNameRole, "name" },
                 { UniqueRole, "is_unique" }
             };
         }
