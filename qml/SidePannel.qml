@@ -25,20 +25,24 @@ Item {
     }
     Component {
         id: listDelegate
-        Text {
-            id: itemTitle
-            text: name
-            elide: Text.ElideLeft
+        Rectangle {
             width: folderView.width
-            color: is_unique ? "black" : "red"
+            height: itemTitle.height
+            color: folderView.currentIndex === index ?  "lightgrey" : "transparent"
+            Text {
+                id: itemTitle
+                anchors.fill: paretn
+                text: name
+                elide: Text.ElideLeft
+                width: folderView.width
+                color: is_unique ? "black" : "red"
 
-            MouseArea {
-                id: mouseArea
-                anchors.fill: parent
-                onClicked: {
-                    console.log(is_unique)
-
-                    folderView.currentIndex = index
+                MouseArea {
+                    id: mouseArea
+                    anchors.fill: parent
+                    onClicked: {
+                        folderView.currentIndex = index
+                    }
                 }
             }
         }
@@ -59,6 +63,15 @@ Item {
                 onClicked: {
                     fileDialog.open()
                 }
+
+                implicitWidth: height
+                Image {
+                    id: icon
+                    height: compareButton.height
+                    width: compareButton.height
+                    source: "res/folder-open-icon.png"
+                    fillMode: Image.Stretch
+                }
             }
 
             Text {
@@ -67,22 +80,24 @@ Item {
             }
         }
 
-        ListView {
-            id: folderView
-
+        Rectangle {
+            id: listViewRect
+            border.color: "black"
             Layout.fillWidth: true
             Layout.fillHeight: true
-            highlight: Rectangle { color: "lightsteelblue"; }
+            Layout.margins: 10
+            ListView {
+                id: folderView
+                clip: true
+                anchors.fill:parent
+                anchors.margins: 3
 
-            delegate: listDelegate
-            onCurrentIndexChanged: {
-                console.log("Current index changed" + currentIndex)
+                delegate: listDelegate
+                model: folderModel
+
+                ScrollBar.vertical: ScrollBar { }
+                ScrollBar.horizontal: ScrollBar { }
             }
-
-            model: folderModel
-
-            ScrollBar.vertical: ScrollBar { }
-            ScrollBar.horizontal: ScrollBar { }
         }
     }
 }

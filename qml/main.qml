@@ -21,13 +21,20 @@ Window {
             }
             Button {
                 id: compareButton
-                text: engine.state === CompareEngine.COMPARING ? qsTr("Cancel") : qsTr("Compare")
-                Layout.alignment: Qt.AlignTop
+                Layout.alignment: Qt.AlignCenter
                 Layout.margins: 10
+                implicitWidth: height
+                Image {
+                    id: icon
+                    height: compareButton.height
+                    width: compareButton.height
+                    source: engine.state === CompareEngine.COMPARING ? "res/cancel.png" : "res/two-arrows-vector.png"
+                }
                 onClicked: {
                     engine.startComparing()
                 }
             }
+
             SidePannel {
                 id: rightPanel
                 folderModel: engine ? engine.rightModel : null

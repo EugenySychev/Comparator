@@ -2,6 +2,9 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>SidePannel.qml</file>
-        <file>TabPanel.qml</file>
+        <file>res/right_arrow.png</file>
+        <file>res/cancel.png</file>
+        <file>res/two-arrows-vector.png</file>
+        <file>res/folder-open-icon.png</file>
     </qresource>
 </RCC>

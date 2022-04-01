@@ -22,7 +22,6 @@ SOURCES += \
 DISTFILES += \
     qml/SidePannel.qml \
     qml/main.qml \
-    qml/TabPanel.qml
 
 RESOURCES += \
     qml/qml.qrc
